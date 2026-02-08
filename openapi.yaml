@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: work-space API
+  description: API for managing spaces, users, and sessions with JWT security.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+
+security:
+  - bearerAuth: []
+
+paths:
+  # --- AUTHENTICATION ---
+  /auth/register:
+    post:
+      summary: Register a new account
+      tags: [Authentication]
+      security: [] 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+
+  /auth/login:
+    post:
+      summary: User login
+      tags: [Authentication]
+      security: [] 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, example: "ali07@gmail.com" }
+                password: { type: string, example: "123123" }
+      responses:
+        '200':
+          description: Success
+
+  # --- SPACE MANAGEMENT ---
+  /space:
+    get:
+      summary: Get all spaces
+      tags: [Space]
+      responses:
+        '200':
+          description: Success
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      summary: Create a space
+      tags: [Space]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Space'
+      responses:
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /space/{id}:
+    get:
+      summary: Get specific space
+      tags: [Space]
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Success
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # --- SESSION MANAGEMENT ---
+  /session/start:
+    post:
+      summary: Start a new session
+      tags: [Session]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+      responses:
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /session:
+    get:
+      summary: Get all sessions
+      tags: [Session]
+      responses:
+        '200':
+          description: List of all sessions
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /session/{id}:
+    get:
+      summary: Get session by ID
+      tags: [Session]
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Session details
+        '404':
+          description: Not Found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /session/end/{id}:
+    post:
+      summary: End a specific session
+      tags: [Session]
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Session ended successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The unique MongoDB ID
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              msg: { type: string, example: "please provid token" }
+
+  schemas:
+    User:
+      type: object
+      properties:
+        name: { type: string, example: "ali" }
+        email: { type: string, example: "ali07@gmail.com" }
+        password: { type: string, example: "123123" }
+    Space:
+      type: object
+      properties:
+        name: { type: string, example: "Main Room" }
+        pricePerHour: { type: number, example: 50 }
+    SessionInput:
+      type: object
+      required: [space, client]
+      properties:
+        space: { type: string, example: "6984446d2a10a4be959392c0" }
+        client: { type: string, example: "ali" }
