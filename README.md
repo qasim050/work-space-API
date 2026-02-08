@@ -39,37 +39,40 @@ This allows you to test all endpoints directly from your browser.
 * `GET /session` - View all session history.
 
 ---
-
-## ⚙️ Installation & Setup
+### ⚙️ Installation & Setup
 
 1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/qasim050/work-space-API.git
-   cd work-space-api
+   ```bash
+   git clone [https://github.com/qasim050/work-space-API.git](https://github.com/qasim050/work-space-API.git)
+   cd work-space-api
 2. **Install dependencies:**
-   ```Bash
-    npm install
-Environment Setup: Create a .env file in the root directory and add:
 
-    PORT=3000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_super_secret_key
-    Run the server:
+   ```bash
+    npm install
+3. **Environment Setup:**
+* Create a .env file in the root directory and add:
 
-# start server
-    ```bash
-    npm start
-***🔒 Security Note:***
-All protected routes require a JSON Web Token. To use them in Swagger or Postman:
+* PORT=3000
+* MONGO_URI=your_mongodb_connection_string
+* JWT_SECRET=your_super_secret_key
+* Run the server:
 
-Login via api/v1/auth/login or api/v1/auth/register.
+### Start the server
 
-Copy the token from the response.
+    npm start
+### 🔒 Security Note
+* All protected routes require a JSON Web Token (JWT). To use them in Swagger or Postman:
 
-Add it to your request header: Authorization: Bearer <your_token>.
+* Login via /api/v1/auth/login or Register via /api/v1/auth/register.
 
-**📝 To-Do / Future Updates**
+* Copy the token from the JSON response.
 
-[ ] Add automated unit testing with Jest.
+* Authorize: * In Swagger: Click the Authorize button and paste the token.
 
-[ ] Integrate a payment gateway for session billing.
+* In Postman: Go to the Auth tab, select Bearer Token, and paste the token.
+
+### 📝 To-Do / Future Updates
+* [ ] Add automated unit testing with Jest.
+
+* [ ] Integrate a payment gateway (Stripe/PayPal) for session billing.
+
